@@ -1,0 +1,111 @@
+import * as vscode from 'vscode';
+import { PickerController } from './picker/pickerController';
+import { StatusBarManager } from './ui/statusBarManager';
+
+let pickerController: PickerController | undefined;
+let statusBarManager: StatusBarManager | undefined;
+
+export async function activate(context: vscode.ExtensionContext) {
+  console.log('PinPoint extension activated');
+
+  // Initialize managers
+  statusBarManager = new StatusBarManager();
+  pickerController = new PickerController(context);
+
+  // Register commands
+  const startPickerCmd = vscode.commands.registerCommand(
+    'pinpoint.startPicker',
+    async () => {
+      if (!pickerController) return;
+      try {
+        statusBarManager?.update('starting', '$(loading~spin) Starting picker...');
+        await pickerController.startPicker();
+        statusBarManager?.update('active', '$(circle-filled~spin) Picker active');
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to start picker: ${error}`);
+        statusBarManager?.update('idle', '$(circle-outline) PinPoint');
+      }
+    }
+  );
+
+  const stopPickerCmd = vscode.commands.registerCommand(
+    'pinpoint.stopPicker',
+    async () => {
+      if (!pickerController) return;
+      try {
+        await pickerController.stopPicker();
+        statusBarManager?.update('idle', '$(circle-outline) PinPoint');
+        vscode.window.showInformationMessage('Picker stopped');
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to stop picker: ${error}`);
+      }
+    }
+  );
+
+  const toggleScreenshotCmd = vscode.commands.registerCommand(
+    'pinpoint.toggleScreenshot',
+    async () => {
+      if (!pickerController) return;
+      pickerController.toggleScreenshot();
+      const enabled = pickerController.isScreenshotEnabled();
+      statusBarManager?.updateScreenshotIndicator(enabled);
+      vscode.window.showInformationMessage(
+        `Screenshots ${enabled ? 'enabled' : 'disabled'}`
+      );
+    }
+  );
+
+  const setModeCmd = vscode.commands.registerCommand(
+    'pinpoint.setMode',
+    async () => {
+      if (!pickerController) return;
+      const modeItems = [
+        { label: 'Quick Fix', description: 'pick', value: 'pick' as const },
+        { label: 'Full', description: 'full', value: 'full' as const },
+      ];
+      const selected = await vscode.window.showQuickPick(modeItems, {
+        placeHolder: 'Select capture mode',
+      });
+      if (selected) {
+        pickerController.setMode(selected.value as any);
+        statusBarManager?.updateModeIndicator(selected.label);
+        vscode.window.showInformationMessage(`Mode set to: ${selected.label}`);
+      }
+    }
+  );
+
+  const clearSelectionCmd = vscode.commands.registerCommand(
+    'pinpoint.clearSelection',
+    async () => {
+      if (!pickerController) return;
+      pickerController.clearSelection();
+      vscode.window.showInformationMessage('Selection cleared');
+    }
+  );
+
+  context.subscriptions.push(
+    startPickerCmd,
+    stopPickerCmd,
+    toggleScreenshotCmd,
+    setModeCmd,
+    clearSelectionCmd
+  );
+
+  // Show welcome message
+  const hasSeenWelcome = context.globalState.get('pinpoint.seenWelcome');
+  if (!hasSeenWelcome) {
+    vscode.window.showInformationMessage(
+      'PinPoint: Hover and click UI elements to capture context for Claude'
+    );
+    context.globalState.update('pinpoint.seenWelcome', true);
+  }
+
+  statusBarManager?.show();
+}
+
+export function deactivate() {
+  console.log('PinPoint extension deactivating');
+  if (pickerController) {
+    pickerController.cleanup();
+  }
+}

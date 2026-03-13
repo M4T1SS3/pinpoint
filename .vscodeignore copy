@@ -1,0 +1,12 @@
+**/.git
+**/.gitignore
+**/.DS_Store
+**/node_modules
+**/npm-debug.log
+**/*.map
+**/*.ts
+.vscode-test
+.env
+.env.test
+src/
+tsconfig.json

@@ -1,0 +1,109 @@
+{
+  "name": "pinpoint",
+  "displayName": "PinPoint",
+  "description": "Pick UI elements and inject structured context directly into your AI chat",
+  "version": "0.1.0",
+  "publisher": "pinpoint",
+  "icon": "resources/icon.png",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "AI",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:pinpoint.startPicker",
+    "onCommand:pinpoint.stopPicker"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pinpoint.startPicker",
+        "title": "PinPoint: Start Picker",
+        "category": "PinPoint"
+      },
+      {
+        "command": "pinpoint.stopPicker",
+        "title": "PinPoint: Stop Picker",
+        "category": "PinPoint"
+      },
+      {
+        "command": "pinpoint.toggleScreenshot",
+        "title": "PinPoint: Toggle Screenshot",
+        "category": "PinPoint"
+      },
+      {
+        "command": "pinpoint.setMode",
+        "title": "PinPoint: Set Mode",
+        "category": "PinPoint"
+      },
+      {
+        "command": "pinpoint.clearSelection",
+        "title": "PinPoint: Clear Selection",
+        "category": "PinPoint"
+      }
+    ],
+    "configuration": {
+      "title": "PinPoint",
+      "properties": {
+        "pinpoint.defaultMode": {
+          "type": "string",
+          "enum": [
+            "pick",
+            "full"
+          ],
+          "default": "pick",
+          "description": "Default capture mode"
+        },
+        "pinpoint.screenshotEnabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable element screenshots by default"
+        },
+        "pinpoint.contextRadius": {
+          "type": "number",
+          "default": 1,
+          "minimum": 0,
+          "maximum": 3,
+          "description": "Number of parent levels to include in context"
+        },
+        "pinpoint.injectionTarget": {
+          "type": "string",
+          "enum": [
+            "claude-code",
+            "copilot-chat",
+            "clipboard"
+          ],
+          "default": "claude-code",
+          "enumDescriptions": [
+            "Inject into Claude Code chat panel",
+            "Inject into GitHub Copilot Chat panel",
+            "Copy to clipboard"
+          ],
+          "description": "Where to inject captured element context"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.95.0",
+    "@vscode/vsce": "^3.7.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@jridgewell/trace-mapping": "^0.3.31",
+    "puppeteer-core": "^24.37.5",
+    "sharp": "^0.34.5",
+    "zod": "^4.3.6"
+  }
+}
