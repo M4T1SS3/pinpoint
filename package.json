@@ -4,6 +4,10 @@
   "description": "Pick UI elements and inject structured context directly into your AI chat",
   "version": "0.1.0",
   "publisher": "pinpoint",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/M4T1SS3/pinpoint.git"
+  },
   "icon": "resources/icon.png",
   "engines": {
     "vscode": "^1.95.0"
