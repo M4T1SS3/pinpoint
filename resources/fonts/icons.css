@@ -1,0 +1,19 @@
+@font-face {
+    font-family: "icons";
+    src: url("./icons.woff?4953f1fcb5ade9bb33ddefa79d700a81") format("woff");
+}
+
+i[class^="icon-"]:before, i[class*=" icon-"]:before {
+    font-family: icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pinpoint-logo:before {
+    content: "\f101";
+}

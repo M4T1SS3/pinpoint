@@ -1,7 +1,7 @@
 {
   "name": "pinpoint",
   "displayName": "PinPoint",
-  "description": "Pick UI elements and inject structured context directly into your AI chat",
+  "description": "Click any UI element in your browser to instantly Capture its HTML, styles, and layout context for your AI coding assistant. No more screenshots.",
   "version": "0.1.0",
   "publisher": "pinpoint",
   "license": "SEE LICENSE IN LICENSE",
@@ -18,30 +18,29 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:pinpoint.startPicker",
-    "onCommand:pinpoint.stopPicker"
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "icons": {
+      "pinpoint-logo": {
+        "description": "PinPoint Logo",
+        "default": {
+          "fontPath": "./resources/fonts/icons.woff",
+          "fontCharacter": "\\F101"
+        }
+      }
+    },
     "commands": [
       {
         "command": "pinpoint.startPicker",
-        "title": "PinPoint: Start Picker",
-        "category": "PinPoint"
+        "title": "Start PinPoint",
+        "category": "PinPoint",
+        "icon": "$(target)"
       },
       {
         "command": "pinpoint.stopPicker",
         "title": "PinPoint: Stop Picker",
-        "category": "PinPoint"
-      },
-      {
-        "command": "pinpoint.toggleScreenshot",
-        "title": "PinPoint: Toggle Screenshot",
-        "category": "PinPoint"
-      },
-      {
-        "command": "pinpoint.setMode",
-        "title": "PinPoint: Set Mode",
         "category": "PinPoint"
       },
       {
@@ -90,6 +89,15 @@
           "description": "Where to inject captured element context"
         }
       }
+    },
+    "menus": {
+      "editor/title": [
+        {
+          "command": "pinpoint.startPicker",
+          "group": "navigation",
+          "when": "editorLangId == typescript || editorLangId == javascript || editorLangId == typescriptreact || editorLangId == javascriptreact || editorLangId == html"
+        }
+      ]
     }
   },
   "scripts": {
