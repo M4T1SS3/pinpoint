@@ -155,6 +155,7 @@ export class PickerController {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         "></div>
         <div id="pinpoint-toolbar" style="
+          pointer-events: auto;
           position: fixed;
           bottom: 24px;
           left: 50%;
