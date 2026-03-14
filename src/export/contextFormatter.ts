@@ -45,14 +45,6 @@ export class ContextFormatter {
     text += `${context.dom.element.html}\n`;
     text += `\`\`\`\n\n`;
 
-    // Parent context if available
-    if (context.dom.parents && context.dom.parents.length > 0) {
-      text += `**Parent (Level 1):**\n`;
-      text += `\`\`\`html\n`;
-      text += `${context.dom.parents[0].html}\n`;
-      text += `\`\`\`\n\n`;
-    }
-
     // Layout
     text += `### Layout\n`;
     text += `- **Position:** top: ${context.layout.bbox.top}px, left: ${context.layout.bbox.left}px\n`;

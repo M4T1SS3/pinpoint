@@ -4,88 +4,60 @@ type PickerState = 'idle' | 'starting' | 'active';
 
 export class StatusBarManager {
   private mainStatus: vscode.StatusBarItem;
-  private modeStatus: vscode.StatusBarItem;
-  private screenshotStatus: vscode.StatusBarItem;
 
   constructor() {
+    // Create status bar item on the RIGHT side (Priority 100 puts it near other main extensions)
     this.mainStatus = vscode.window.createStatusBarItem(
       vscode.StatusBarAlignment.Right,
       100
     );
     this.mainStatus.name = 'PinPoint Status';
-
-    this.modeStatus = vscode.window.createStatusBarItem(
-      vscode.StatusBarAlignment.Right,
-      99
-    );
-    this.modeStatus.name = 'PinPoint Mode';
-
-    this.screenshotStatus = vscode.window.createStatusBarItem(
-      vscode.StatusBarAlignment.Right,
-      98
-    );
-    this.screenshotStatus.name = 'PinPoint Screenshot';
-
     this.initializeDefaults();
   }
 
   private initializeDefaults() {
-    this.mainStatus.text = '$(target) PinPoint';
+    this.mainStatus.text = '$(pinpoint-logo) PinPoint';
     this.mainStatus.command = 'pinpoint.startPicker';
     this.mainStatus.tooltip = 'Click to start element picker';
-    this.mainStatus.color = '#00ff88'; // Neon green
-
-    this.updateModeIndicator('Quick Fix');
-    this.updateScreenshotIndicator(false);
+    // Default color (gray/white depending on theme)
+    this.mainStatus.color = undefined; 
   }
 
   show() {
     this.mainStatus.show();
-    this.modeStatus.show();
-    this.screenshotStatus.show();
   }
 
   hide() {
     this.mainStatus.hide();
-    this.modeStatus.hide();
-    this.screenshotStatus.hide();
   }
 
   update(state: PickerState, text: string) {
-    this.mainStatus.text = text;
     if (state === 'active') {
+      this.mainStatus.text = '$(pinpoint-logo) PinPoint Active';
       this.mainStatus.command = 'pinpoint.stopPicker';
       this.mainStatus.tooltip = 'Click to stop picker (Esc to cancel)';
-      this.mainStatus.color = '#39ff14'; // Bright neon green when active
+      // Active color: Bright Green/Amber to match brand
+      this.mainStatus.color = '#ABFF06'; 
       this.mainStatus.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+    } else if (state === 'starting') {
+      this.mainStatus.text = '$(loading~spin) PinPoint';
+      this.mainStatus.color = undefined;
+      this.mainStatus.backgroundColor = undefined;
     } else {
+      // Idle state: Grayed out / default color
+      this.mainStatus.text = '$(pinpoint-logo) PinPoint';
       this.mainStatus.command = 'pinpoint.startPicker';
       this.mainStatus.tooltip = 'Click to start element picker';
-      this.mainStatus.color = '#00ff88'; // Softer neon green when idle
+      this.mainStatus.color = new vscode.ThemeColor('statusBar.foreground'); // Use theme foreground (usually gray/white)
       this.mainStatus.backgroundColor = undefined;
     }
   }
 
-  updateModeIndicator(mode: string) {
-    const modeLabel = mode.replace('-', ' ');
-    this.modeStatus.text = `$(layers) ${modeLabel}`;
-    this.modeStatus.command = 'pinpoint.setMode';
-    this.modeStatus.tooltip = `Current mode: ${mode}`;
-    this.modeStatus.color = '#00ff88'; // Neon green
-  }
-
-  updateScreenshotIndicator(enabled: boolean) {
-    this.screenshotStatus.text = enabled
-      ? '$(image) Screenshot ON'
-      : '$(circle-outline) Screenshot OFF';
-    this.screenshotStatus.command = 'pinpoint.toggleScreenshot';
-    this.screenshotStatus.tooltip = `Screenshots ${enabled ? 'enabled' : 'disabled'}`;
-    this.screenshotStatus.color = enabled ? '#39ff14' : '#00ff88'; // Brighter when enabled
-  }
+  // Legacy methods (no-op now as modes are handled in toolbar)
+  updateModeIndicator(mode: string) {}
+  updateScreenshotIndicator(enabled: boolean) {}
 
   dispose() {
     this.mainStatus.dispose();
-    this.modeStatus.dispose();
-    this.screenshotStatus.dispose();
   }
 }

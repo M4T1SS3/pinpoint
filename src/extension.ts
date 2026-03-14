@@ -42,38 +42,6 @@ export async function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  const toggleScreenshotCmd = vscode.commands.registerCommand(
-    'pinpoint.toggleScreenshot',
-    async () => {
-      if (!pickerController) return;
-      pickerController.toggleScreenshot();
-      const enabled = pickerController.isScreenshotEnabled();
-      statusBarManager?.updateScreenshotIndicator(enabled);
-      vscode.window.showInformationMessage(
-        `Screenshots ${enabled ? 'enabled' : 'disabled'}`
-      );
-    }
-  );
-
-  const setModeCmd = vscode.commands.registerCommand(
-    'pinpoint.setMode',
-    async () => {
-      if (!pickerController) return;
-      const modeItems = [
-        { label: 'Quick Fix', description: 'pick', value: 'pick' as const },
-        { label: 'Full', description: 'full', value: 'full' as const },
-      ];
-      const selected = await vscode.window.showQuickPick(modeItems, {
-        placeHolder: 'Select capture mode',
-      });
-      if (selected) {
-        pickerController.setMode(selected.value as any);
-        statusBarManager?.updateModeIndicator(selected.label);
-        vscode.window.showInformationMessage(`Mode set to: ${selected.label}`);
-      }
-    }
-  );
-
   const clearSelectionCmd = vscode.commands.registerCommand(
     'pinpoint.clearSelection',
     async () => {
@@ -86,8 +54,6 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     startPickerCmd,
     stopPickerCmd,
-    toggleScreenshotCmd,
-    setModeCmd,
     clearSelectionCmd
   );
 
