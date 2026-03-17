@@ -1,5 +1,5 @@
 import * as puppeteer from 'puppeteer-core';
-import sharp from 'sharp';
+import Jimp from 'jimp';
 import * as path from 'path';
 import * as fs from 'fs';
 import { Screenshot } from '../schemas';
@@ -52,28 +52,25 @@ export class ScreenshotExtractor {
       }
 
       // Get element screenshot
-      let screenshotBuffer = await elementHandle.screenshot({
+      // Get element screenshot
+      const screenshotUint8 = await elementHandle.screenshot({
         type: 'png',
       });
+      let finalBuffer = Buffer.from(screenshotUint8);
 
-      // Use sharp to add padding
+      // Use jimp to add padding
       if (padding > 0) {
-        const metadata = await sharp(screenshotBuffer).metadata();
-        const width = metadata.width || 0;
-        const height = metadata.height || 0;
+        const image = await Jimp.read(finalBuffer);
+        const imageWidth = image.getWidth();
+        const imageHeight = image.getHeight();
 
-        screenshotBuffer = await sharp(screenshotBuffer)
-          .extend({
-            top: padding,
-            bottom: padding,
-            left: padding,
-            right: padding,
-            background: { r: 255, g: 255, b: 255, alpha: 0.1 },
-          })
-          .toBuffer();
+        const paddedImage = new Jimp(imageWidth + (padding * 2), imageHeight + (padding * 2), 0xffffff1a);
+        paddedImage.composite(image, padding, padding);
+
+        finalBuffer = await paddedImage.getBufferAsync(Jimp.MIME_PNG) as any;
       }
 
-      fs.writeFileSync(filepath, screenshotBuffer);
+      fs.writeFileSync(filepath, finalBuffer);
 
       return {
         path: filepath,

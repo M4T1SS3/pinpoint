@@ -108,6 +108,7 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@types/jimp": "^0.2.28",
     "@types/node": "^20.10.0",
     "@types/vscode": "^1.95.0",
     "@vscode/vsce": "^3.7.1",
@@ -115,8 +116,8 @@
   },
   "dependencies": {
     "@jridgewell/trace-mapping": "^0.3.31",
+    "jimp": "^0.22.12",
     "puppeteer-core": "^24.37.5",
-    "sharp": "^0.34.5",
     "zod": "^4.3.6"
   }
 }
