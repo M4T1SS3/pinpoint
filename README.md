@@ -148,7 +148,7 @@ Screenshot + bbox + minimal metadata.
 
 ### Screenshots
 - **Element-level** via `elementHandle.screenshot()`
-- Saved to `.claude/tmp/element-<timestamp>.png`
+- Saved to `.pinpoint/temp/element-<timestamp>.png`
 - Auto-referenced in chat via @ mention
 - Auto-deleted on extension close
 
@@ -192,7 +192,7 @@ Make sure Chrome/Chromium is installed. On Windows, check `Program Files/Google/
 Press `Escape` to cancel, or run `PinPoint: Stop Picker`.
 
 ### Screenshots not saving
-Check that `.claude/tmp/` is writable. The extension creates it automatically.
+Check that `.pinpoint/temp/` is writable. The extension creates it automatically.
 
 ### Selectors are unstable
 If you see UUIDs or random hashes in captured selectors, that's a sign the app doesn't use stable IDs. The picker falls back to position-based selectors, which may break if the DOM changes.

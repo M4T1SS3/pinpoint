@@ -44,12 +44,12 @@ export class PickerController {
         throw new Error('No workspace folder open. Please open a folder first.');
       }
 
-      this.tempDir = path.join(this.workspaceRoot, '.claude', 'tmp');
+      this.tempDir = path.join(this.workspaceRoot, '.pinpoint', 'temp');
       if (!fs.existsSync(this.tempDir)) {
         fs.mkdirSync(this.tempDir, { recursive: true });
       }
 
-      // Ensure .gitignore includes .claude/tmp
+      // Ensure .gitignore includes .pinpoint/
       this.ensureGitignore();
 
       // Detect local servers and let user pick or enter custom URL
@@ -793,7 +793,7 @@ export class PickerController {
 
   private ensureGitignore() {
     const gitignorePath = path.join(this.workspaceRoot, '.gitignore');
-    const tmpPattern = '.claude/tmp/';
+    const tmpPattern = '.pinpoint/';
 
     try {
       let gitignoreContent = '';
