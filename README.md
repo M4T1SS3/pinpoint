@@ -8,30 +8,13 @@ PinPoint is a VS Code extension that replaces the tedious "screenshot → paste 
 
 ### Problem it solves
 
-- **Screenshot fatigue**: No more full-page screenshots that add noise
-- **Ambiguity**: AI agents often misunderstand UI intent from images
-- **Token waste**: Screenshots consume expensive API tokens
-- **Context loss**: Missing the structural HTML context AI agents need
+Avoids noisy screenshots by providing structured, DOM-aware UI context that reduces ambiguity and token usage.
 
 ### Solution
 
-Instead of screenshots, PinPoint captures:
-- **Robust selectors** (data-testid → stable ID → role+aria → position-based)
-- **Element + parent HTML** (clean, truncated)
-- **Layout info** (bbox, positioning, viewport context)
-- **Computed style diffs** (what's explicitly set vs. inherited)
-- **Optional element screenshot** (for visual edge cases)
+Extracts stable selectors, cleaned element+parent HTML, layout bbox, and computed style diffs, optionally captures an element screenshot, and formats everything as AI-friendly Markdown.
 
-All formatted as AI-friendly markdown, ready to paste.
 
----
-
-## Installation
-
-1. Clone the repository
-2. `npm install`
-3. `npm run compile`
-4. In VS Code: **Run Extension** (F5) or package with `vsce package`
 
 ## Usage
 
@@ -51,16 +34,6 @@ All formatted as AI-friendly markdown, ready to paste.
 - `PinPoint: Toggle Screenshot` - Enable/disable element screenshots
 - `PinPoint: Set Mode` - Choose Quick Fix / Layout / CSS / Visual
 - `PinPoint: Clear Selection` - Clear multi-select queue
-
-### Settings
-
-```json
-{
-  "pinpoint.defaultMode": "quick-fix",        // quick-fix | layout | css | visual
-  "pinpoint.screenshotEnabled": false,         // Enable screenshots by default
-  "pinpoint.contextRadius": 1                  // Parent levels to include (0-3)
-}
-```
 
 ---
 
@@ -196,26 +169,3 @@ Check that `.pinpoint/temp/` is writable. The extension creates it automatically
 
 ### Selectors are unstable
 If you see UUIDs or random hashes in captured selectors, that's a sign the app doesn't use stable IDs. The picker falls back to position-based selectors, which may break if the DOM changes.
-
----
-
-## Development
-
-### Build
-```bash
-npm run compile
-```
-
-### Watch
-```bash
-npm run watch
-```
-
-### Test in VS Code
-Press `F5` to launch extension in a new VS Code window.
-
----
-
-## License
-
-MIT
